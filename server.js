@@ -18,6 +18,18 @@ const divide = (num1, num2) => {
   return num1 / num2;
 };
 
+const exponentiate = (base, exponent) => {
+    return Math.pow(base, exponent);
+};
+
+const squareRoot = (num) => {
+    return Math.sqrt(num);
+};
+
+const modulo = (num1, num2) => {
+    return num1 % num2;
+};
+
 // Function to validate numbers
 function validateNumbers(num1, num2) {
   if (isNaN(num1) || isNaN(num2)) {
@@ -109,6 +121,68 @@ app.get("/divide", (req, res) => {
     // Return error if any exception occurs
     res.status(500).json({ statuscode: 500, message: error.toString() });
   }
+});
+
+// Exponentiation endpoint
+app.get('/exponentiate', (req, res) => {
+    try {
+        const { base, exponent } = req.query;
+        // Validate numbers
+        if (!validateNumbers(parseFloat(base), parseFloat(exponent))) {
+            // Return error if numbers are invalid
+            return res.status(400).send('Invalid numbers provided.');
+        }
+        // Perform exponentiation
+        const result = exponentiate(parseFloat(base), parseFloat(exponent));
+        // Return the result
+        res.status(200).json({statuscode: 200, data: result});
+    } catch (error) {
+        console.error(error);
+        // Return error if any exception occurs
+        res.status(500).json({statuscode: 500, message: error.toString()});
+    }
+});
+
+// Square Root endpoint
+app.get('/sqrt', (req, res) => {
+    try {
+        const { num } = req.query;
+        const number = parseFloat(num);
+
+        // check if it's a number and non-negative
+        if (isNaN(number) || number < 0) {
+            return res.status(400).send('Invalid number provided. Ensure it is non-negative.');
+        }
+
+        const result = squareRoot(number);
+        // Return the result
+        res.status(200).json({statuscode: 200, data: result});
+    } catch (error) {
+        console.error(error);
+        // Return error if any exception occurs
+        res.status(500).json({statuscode: 500, message: error.toString()});
+    }
+});
+
+
+// Modulo endpoint
+app.get('/modulo', (req, res) => {
+    try {
+        const { num1, num2 } = req.query;
+        // Validate numbers
+        if (!validateNumbers(parseFloat(num1), parseFloat(num2))) {
+            // Return error if numbers are invalid
+            return res.status(400).send('Invalid numbers provided.');
+        }
+        // Perform modulo
+        const result = modulo(parseFloat(num1), parseFloat(num2));
+        // Return the result
+        res.status(200).json({statuscode: 200, data: result});
+    } catch (error) {
+        console.error(error);
+        // Return error if any exception occurs
+        res.status(500).json({statuscode: 500, message: error.toString()});
+    }
 });
 
 // Start the server
